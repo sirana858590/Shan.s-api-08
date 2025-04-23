@@ -35,4 +35,8 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.send('Imgur API Wrapper is running');
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
