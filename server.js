@@ -1,44 +1,38 @@
 const express = require('express');
 const axios = require('axios');
+const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
+const upload = multer({ dest: 'uploads/' });
 const PORT = 3000;
 
-// Hardcoded Imgur Client ID (not recommended for production)
-const IMGUR_CLIENT_ID = '169afb2f9e0741b'; // Replace with your actual client ID
+// Replace with your Imgur Client ID
+const IMGUR_CLIENT_ID = '169afb2f9e0741b'; 
 
-const imgurApi = axios.create({
-  baseURL: 'https://api.imgur.com/3',
-  headers: {
-    'Authorization': `Client-ID ${IMGUR_CLIENT_ID}`
-  }
-});
-
-// Simple route to test image lookup
-app.get('/api/image/:id', async (req, res) => {
+// Single endpoint for both images and videos
+app.post('/upload', upload.single('file'), async (req, res) => {
   try {
-    const response = await imgurApi.get(`/image/${req.params.id}`);
-    res.json(response.data);
+    if (!req.file) return res.status(400).send('No file uploaded');
+
+    const fileStream = fs.createReadStream(req.file.path);
+    const formData = new FormData();
+    formData.append('image', fileStream);
+
+    const response = await axios.post('https://api.imgur.com/3/image', formData, {
+      headers: {
+        'Authorization': `Client-ID ${IMGUR_CLIENT_ID}`,
+        ...formData.getHeaders()
+      }
+    });
+
+    fs.unlinkSync(req.file.path); // Clean up
+    res.json({ link: response.data.data.link });
+    
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (req.file) fs.unlinkSync(req.file.path); // Clean up on error
+    res.status(500).send(error.response?.data?.data?.error || 'Upload failed');
   }
 });
 
-// Route to get gallery images
-app.get('/api/gallery', async (req, res) => {
-  try {
-    const response = await imgurApi.get('/gallery/hot/viral/0');
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Health check endpoint
-app.get('/', (req, res) => {
-  res.send('Imgur API Wrapper is running');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
