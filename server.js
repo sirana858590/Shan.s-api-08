@@ -1,42 +1,42 @@
 const express = require('express');
 const axios = require('axios');
 const multer = require('multer');
+const FormData = require('form-data');
 const fs = require('fs');
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Replace with your Imgur Client ID
-const IMGUR_CLIENT_ID = '169afb2f9e0741b'; 
+// Add this to handle GET requests to /upload (for testing)
+app.get('/api/upload', (req, res) => {
+  res.status(405).json({ error: 'Use POST method for uploads' });
+});
 
-// Single endpoint for both images and videos
-app.post('/upload', upload.single('file'), async (req, res) => {
+// Your existing POST endpoint
+app.post('/api/upload', upload.single('file'), async (req, res) => {
   try {
-    if (!req.file) return res.status(400).send('No file uploaded');
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
 
-    const fileStream = fs.createReadStream(req.file.path);
     const formData = new FormData();
-    formData.append('image', fileStream);
+    formData.append('image', fs.createReadStream(req.file.path));
 
-    const response = await axios.post('https://api.imgur.com/3/image', formData, {
+    const imgurResponse = await axios.post('https://api.imgur.com/3/image', formData, {
       headers: {
-        'Authorization': `Client-ID ${IMGUR_CLIENT_ID}`,
+        'Authorization': `Client-ID ${process.env.IMGUR_CLIENT_ID || '169afb2f9e0741b'}`,
         ...formData.getHeaders()
       }
     });
 
     fs.unlinkSync(req.file.path); // Clean up
-    res.json({ link: response.data.data.link });
+    res.json({ link: imgurResponse.data.data.link });
     
   } catch (error) {
-    if (req.file) fs.unlinkSync(req.file.path); // Clean up on error
-    res.status(500).send(error.response?.data?.data?.error || 'Upload failed');
+    if (req.file) fs.unlinkSync(req.file.path);
+    res.status(500).json({ error: error.message });
   }
-});
-
-app.get('/', (req, res) => {
-  res.send('Imgur API Wrapper is running');
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
