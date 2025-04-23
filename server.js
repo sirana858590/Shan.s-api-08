@@ -2,10 +2,13 @@ const express = require('express');
 const multer = require('multer');
 const fetch = require('node-fetch');
 const fs = require('fs');
+const cors = require('cors');
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
-const CLIENT_ID = '169afb2f9e0741b'; // Replace with your Client ID
+const CLIENT_ID = '169afb2f9e0741b'; // Replace this!
+
+app.use(cors());
 
 app.post('/ShAn/imgur', upload.single('image'), async (req, res) => {
   try {
@@ -21,16 +24,20 @@ app.post('/ShAn/imgur', upload.single('image'), async (req, res) => {
       body: JSON.stringify({
         image: base64Image,
         type: 'base64'
-      })
+      }),
     });
 
     const data = await response.json();
-    fs.unlinkSync(filePath); // Clean up file after upload
+    fs.unlinkSync(filePath); // Clean up
 
-    res.json({ link: data.data.link });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Upload failed');
+    if (data.success) {
+      res.json({ link: data.data.link });
+    } else {
+      res.status(500).json({ error: data });
+    }
+  } catch (error) {
+    console.error('Upload failed:', error);
+    res.status(500).send('Server Error');
   }
 });
 
