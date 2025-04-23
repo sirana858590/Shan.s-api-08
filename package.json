@@ -8,11 +8,12 @@
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "ShAn",
   "license": "ISC",
   "dependencies": {
     "express": "^5.1.0",
     "multer": "^1.4.5-lts.2",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "cors": "^2.8.5"
   }
 }
