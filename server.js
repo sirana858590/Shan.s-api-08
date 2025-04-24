@@ -1,84 +1,54 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// In-memory storage (for demo, use a database in production)
-const tempNumbers = new Map();
+// In-memory storage for demo purposes (use a database in production)
+const numbers = {};
 
-// Helper function to generate random number
-function generateRandomNumber(length = 8) {
-  return Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
-}
-
-// Helper function to check if number exists and is valid
-function validateTempNumber(number) {
-  if (!tempNumbers.has(number)) {
-    return { valid: false, message: 'Number not found' };
-  }
-
-  const numberData = tempNumbers.get(number);
-  if (new Date() > new Date(numberData.expiresAt)) {
-    return { valid: false, message: 'Number has expired' };
-  }
-
-  return { valid: true, message: 'Number is valid', data: numberData };
-}
-
-// Routes
-app.post('/generate', (req, res) => {
-  const expiryMinutes = req.body.expiryMinutes || 60;
-  const number = generateRandomNumber();
-  const expiresAt = new Date(Date.now() + expiryMinutes * 60000);
-
-  const numberData = {
-    number,
-    expiresAt,
-    createdAt: new Date(),
-    meta: req.body.meta || {}
-  };
-
-  tempNumbers.set(number, numberData);
-
-  res.json({
-    success: true,
-    number,
-    expiresAt: expiresAt.toISOString(),
-    createdAt: numberData.createdAt.toISOString()
-  });
+// Generate a temporary number
+app.post('/api/numbers', (req, res) => {
+    const id = uuidv4();
+    const tempNumber = `+1${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+    numbers[id] = {
+        number: tempNumber,
+        createdAt: new Date(),
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+        messages: []
+    };
+    res.json({ id, number: tempNumber });
 });
 
-app.get('/validate/:number', (req, res) => {
-  const validation = validateTempNumber(req.params.number);
-  res.json(validation);
+// Check for messages
+app.get('/api/numbers/:id', (req, res) => {
+    const numberData = numbers[req.params.id];
+    if (!numberData) {
+        return res.status(404).json({ error: 'Number not found' });
+    }
+    res.json(numberData);
 });
 
-app.get('/numbers', (req, res) => {
-  const numbers = Array.from(tempNumbers.entries()).map(([number, data]) => ({
-    number,
-    expiresAt: data.expiresAt.toISOString(),
-    createdAt: data.createdAt.toISOString(),
-    valid: new Date() < new Date(data.expiresAt)
-  }));
-  res.json({ numbers });
+// Webhook simulation (for receiving messages)
+app.post('/api/webhook', (req, res) => {
+    // In a real implementation, this would be called by your SMS provider
+    const { to, from, body } = req.body;
+    for (const id in numbers) {
+        if (numbers[id].number === to) {
+            numbers[id].messages.push({
+                from,
+                body,
+                receivedAt: new Date()
+            });
+            break;
+        }
+    }
+    res.sendStatus(200);
 });
 
-app.delete('/numbers/:number', (req, res) => {
-  if (tempNumbers.has(req.params.number)) {
-    tempNumbers.delete(req.params.number);
-    res.json({ success: true, message: 'Number deleted' });
-  } else {
-    res.status(404).json({ success: false, message: 'Number not found' });
-  }
-});
-
-// Start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
