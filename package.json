@@ -1,21 +1,18 @@
 {
-  "name": "shan.s-imgur-api",
+  "name": "temp-number-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Temporary phone number API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "ShAn",
-  "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0",
-    "axios": "^1.6.7",
-    "multer": "^1.4.5-lts.2",
-    "node-fetch": "^3.3.2",
-    "cors": "^2.8.5"
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
