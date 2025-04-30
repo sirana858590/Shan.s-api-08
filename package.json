@@ -1,16 +1,13 @@
 {
-  "name": "imgbb-api",
+  "name": "imgbb-uploader",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+    "axios": "^1.6.0",
     "express": "^4.18.2",
-    "axios": "^1.6.2",
-    "form-data": "^4.0.0",
-    "file-type": "^18.0.0",
-    "multer": "^1.4.5-lts.1",
-    "cors": "^2.8.5"
+    "form-data": "^4.0.0"
   }
 }
