@@ -1,67 +1,34 @@
-// server.js
 const express = require('express');
 const axios = require('axios');
 const FormData = require('form-data');
-const fileType = require('file-type');
-const multer = require('multer');
-const cors = require('cors');
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
+const PORT = process.env.PORT || 3000;
+const imgbbApiKey = '91ad8d61a37681e29b2e48125c76ecdb';
 
-// Middleware
-app.use(cors());
 app.use(express.json());
 
-// Environment variables
-const IMGBB_API_KEY = process.env.IMGBB_API_KEY || "91ad8d61a37681e29b2e48125c76ecdb";
-const PORT = process.env.PORT || 3000;
+app.post('/upload', async (req, res) => {
+  const imageUrl = req.body.imageUrl;
+  if (!imageUrl) return res.status(400).json({ error: 'Missing imageUrl' });
 
-// Upload endpoint
-app.post('/upload', upload.single('image'), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No image file provided' });
-    }
-
-    // Validate file type
-    const fileInfo = await fileType.fromBuffer(req.file.buffer);
-    if (!fileInfo?.mime.startsWith('image/')) {
-      return res.status(400).json({ error: 'Invalid image format' });
-    }
-
-    // Upload to ImgBB
+    const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
     const formData = new FormData();
-    formData.append('image', req.file.buffer, {
-      filename: `upload_${Date.now()}.${fileInfo.ext}`,
-      contentType: fileInfo.mime
-    });
+    formData.append('image', Buffer.from(imageResponse.data), { filename: 'image.png' });
 
-    const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
+    const uploadResponse = await axios.post('https://api.imgbb.com/1/upload', formData, {
       headers: formData.getHeaders(),
-      params: { key: IMGBB_API_KEY }
+      params: { key: imgbbApiKey }
     });
 
-    if (!response.data.success) {
-      throw new Error('ImgBB upload failed');
-    }
-
-    res.json({
-      success: true,
-      url: response.data.data.url,
-      deleteUrl: response.data.data.delete_url
-    });
-
+    res.json({ imageUrl: uploadResponse.data.data.url });
   } catch (error) {
-    console.error('Upload error:', error);
-    res.status(500).json({
-      error: error.message || 'Image processing failed',
-      details: error.response?.data?.error || null
-    });
+    console.error(error.response?.data || error.message);
+    res.status(500).json({ error: 'Failed to upload image.' });
   }
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
