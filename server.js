@@ -29,6 +29,10 @@ app.post('/ShAn/imgur', async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.json( 'Welcome To ShAn.s Api' );
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
