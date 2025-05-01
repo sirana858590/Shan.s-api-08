@@ -1,38 +1,32 @@
 const express = require('express');
 const axios = require('axios');
-const FormData = require('form-data');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
-const imgbbApiKey = '91ad8d61a37681e29b2e48125c76ecdb'; // Replace with your own
+
+const IMGUR_CLIENT_ID = '6a8362c76ca05ff'; // Replace with your real Client ID
 
 app.use(express.json());
 
-app.post('/upload', async (req, res) => {
+app.post('/ShAn/imgur', async (req, res) => {
   const { imageUrl } = req.body;
-  if (!imageUrl) return res.status(400).json({ error: 'Missing imageUrl in body' });
+  if (!imageUrl) return res.status(400).json({ error: 'Missing imageUrl' });
 
   try {
-    const imgRes = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-    const formData = new FormData();
-    formData.append('image', Buffer.from(imgRes.data), { filename: 'image.png' });
-
-    const upload = await axios.post('https://api.imgbb.com/1/upload', formData, {
-      headers: formData.getHeaders(),
-      params: { key: imgbbApiKey }
+    const response = await axios.post('https://api.imgur.com/3/image', {
+      image: imageUrl,
+      type: 'URL'
+    }, {
+      headers: {
+        Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
+      }
     });
 
-    res.json({ imageUrl: upload.data.data.url });
+    res.json({ imageUrl: response.data.data.link });
   } catch (err) {
     console.error(err.response?.data || err.message);
-    res.status(500).json({ error: 'Failed to upload image to ImgBB' });
+    res.status(500).json({ error: 'Imgur upload failed' });
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('ImgBB uploader is running');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+app.get('/', (req, res) => res.send('Imgur Uploader API Running'));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
