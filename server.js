@@ -1,31 +1,29 @@
-const express = require('express');
 const axios = require('axios');
+const express = require('express');
 const app = express();
 
 app.use(express.json());
 
-const IMGUR_CLIENT_ID = 'e1069d52a0bb363';
-
 app.post('/ShAn/imgur', async (req, res) => {
   const { imageUrl } = req.body;
-  if (!imageUrl) {
-    return res.status(400).json({ error: 'Missing imageUrl' });
-  }
+
+  if (!imageUrl) return res.status(400).json({ error: "Missing image URL" });
 
   try {
-    const response = await axios.post('https://api.imgur.com/3/image', {
-      image: imageUrl,
-      type: 'URL',
-    }, {
-      headers: {
-        Authorization: `Client-ID ${IMGUR_CLIENT_ID}`,
-      },
-    });
+    const imgurRes = await axios.post(
+      'https://api.imgur.com/3/image',
+      { image: imageUrl },
+      {
+        headers: {
+          Authorization: 'Client-ID 0778d45eee5d31a'
+        }
+      }
+    );
 
-    res.json({ imageUrl: response.data.data.link });
+    return res.json({ imageUrl: imgurRes.data.data.link });
   } catch (error) {
-    console.error('Imgur Upload Error:', error.response?.data || error.message);
-    res.status(500).json({ error: 'Imgur upload failed' });
+    console.error('Imgur API error:', error?.response?.data || error.message);
+    return res.status(500).json({ error: 'Upload failed' });
   }
 });
 
@@ -34,6 +32,4 @@ app.get('/', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
