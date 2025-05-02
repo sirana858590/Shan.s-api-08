@@ -106,6 +106,19 @@ app.get('/', (req, res) => {
           50% { background-position: 100% 50% }
           100% { background-position: 0% 50% }
         }
+        @keyframes float {
+          0% {
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 0.1;
+          }
+          50% {
+            opacity: 0.6;
+          }
+          100% {
+            transform: translate(var(--tx), var(--ty)) rotate(360deg);
+            opacity: 0.1;
+          }
+        }
       </style>
     </head>
     <body>
@@ -128,43 +141,25 @@ app.get('/', (req, res) => {
         
         for (let i = 0; i < 50; i++) {
           const particle = document.createElement('div');
+          const duration = Math.random() * 20 + 10;
+          const tx = Math.random() * 200 - 100;
+          const ty = Math.random() * 200 - 100;
+          
           particle.style.position = 'absolute';
           particle.style.width = Math.random() * 5 + 2 + 'px';
           particle.style.height = particle.style.width;
           particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
           particle.style.borderRadius = '50%';
           particle.style.opacity = Math.random() * 0.5 + 0.1;
-          
-          // Random starting position
           particle.style.left = Math.random() * 100 + '%';
           particle.style.top = Math.random() * 100 + '%';
-          
-          // Animation
-          const duration = Math.random() * 20 + 10;
-          particle.style.animation = `float ${duration}s linear infinite`;
+          particle.style.setProperty('--tx', tx + 'px');
+          particle.style.setProperty('--ty', ty + 'px');
+          particle.style.animation = 'float ' + duration + 's linear infinite';
           particle.style.animationDelay = Math.random() * 5 + 's';
           
           particles.appendChild(particle);
         }
-        
-        // Add animation style
-        const style = document.createElement('style');
-        style.innerHTML = \`
-          @keyframes float {
-            0% {
-              transform: translate(0, 0) rotate(0deg);
-              opacity: 0.1;
-            }
-            50% {
-              opacity: 0.6;
-            }
-            100% {
-              transform: translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px) rotate(360deg);
-              opacity: 0.1;
-            }
-          }
-        \`;
-        document.head.appendChild(style);
       </script>
     </body>
     </html>
