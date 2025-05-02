@@ -29,33 +29,145 @@ app.post('/ShAn/imgur', async (req, res) => {
 
 app.get('/', (req, res) => {
   const coloredText = `
-    <div style="font-family: monospace; font-size: 24px;">
-      <span style="color: #ff0000;">E</span>
-      <span style="color: #00ff00;">w</span>
-      <span style="color: #0000ff;">r</span>
-      <span> </span>
-      <span style="color: #ff00ff;">S</span>
-      <span style="color: #ffff00;">h</span>
-      <span style="color: #00ffff;">A</span>
-      <span style="color: #ff9900;">n</span>
-      <span style="color: #9900ff;">.</span>
-      <span style="color: #ff0099;">s</span>
-      <span> </span>
-      <span style="color: #00ff99;">A</span>
-      <span style="color: #ff6600;">p</span>
-      <span style="color: #6600ff;">i</span>
-      <span> </span>
-      <span style="color: #ff0066;">I</span>
-      <span style="color: #66ff00;">s</span>
-      <span> </span>
-      <span style="color: #0066ff;">R</span>
-      <span style="color: #ff3300;">u</span>
-      <span style="color: #3300ff;">n</span>
-      <span style="color: #ff0033;">n</span>
-      <span style="color: #33ff00;">i</span>
-      <span style="color: #0033ff;">n</span>
-      <span style="color: #ff0000;">g</span>
-    </div>
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Ewr ShAn.s Api</title>
+      <style>
+        body {
+          background: #121212;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          font-family: 'Arial', sans-serif;
+          overflow: hidden;
+        }
+        .container {
+          text-align: center;
+          padding: 30px;
+          border-radius: 15px;
+          background: rgba(0, 0, 0, 0.7);
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+          position: relative;
+          overflow: hidden;
+        }
+        .title {
+          font-size: 3rem;
+          font-weight: bold;
+          background: linear-gradient(90deg, 
+            #ff0000, #ff9900, #ffff00, 
+            #33ff00, #00ff99, #0066ff, 
+            #3300ff, #9900ff, #ff0099);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          background-size: 400% 400%;
+          animation: rainbow 8s ease infinite;
+          margin-bottom: 20px;
+          text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .subtitle {
+          color: #ccc;
+          font-size: 1.2rem;
+          margin-bottom: 30px;
+        }
+        .endpoints {
+          color: #aaa;
+          text-align: left;
+          max-width: 500px;
+          margin: 0 auto;
+          padding: 15px;
+          background: rgba(255,255,255,0.1);
+          border-radius: 8px;
+        }
+        .endpoint {
+          margin: 10px 0;
+          font-family: monospace;
+        }
+        .endpoint a {
+          color: #0af;
+          text-decoration: none;
+        }
+        .endpoint a:hover {
+          text-decoration: underline;
+        }
+        .particles {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+        }
+        @keyframes rainbow {
+          0% { background-position: 0% 50% }
+          50% { background-position: 100% 50% }
+          100% { background-position: 0% 50% }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="particles" id="particles"></div>
+      <div class="container">
+        <div class="title">Ewr ShAn.s Api</div>
+        <div class="subtitle">✨ API Is Running Smoothly ✨</div>
+        
+        <div class="endpoints">
+          <div class="endpoint">Available Endpoints:</div>
+          <div class="endpoint">• <a href="/ShAn/girlsvideo">/ShAn/girlsvideo</a> - Get random girls video</div>
+          <div class="endpoint">• <a href="/ShAn/dpboy">/ShAn/dpboy</a> - Get random boys DP</div>
+        </div>
+      </div>
+      
+      <script>
+        // Simple particle animation
+        const particles = document.getElementById('particles');
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement('div');
+          particle.style.position = 'absolute';
+          particle.style.width = Math.random() * 5 + 2 + 'px';
+          particle.style.height = particle.style.width;
+          particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          particle.style.borderRadius = '50%';
+          particle.style.opacity = Math.random() * 0.5 + 0.1;
+          
+          // Random starting position
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.top = Math.random() * 100 + '%';
+          
+          // Animation
+          const duration = Math.random() * 20 + 10;
+          particle.style.animation = `float ${duration}s linear infinite`;
+          particle.style.animationDelay = Math.random() * 5 + 's';
+          
+          particles.appendChild(particle);
+        }
+        
+        // Add animation style
+        const style = document.createElement('style');
+        style.innerHTML = \`
+          @keyframes float {
+            0% {
+              transform: translate(0, 0) rotate(0deg);
+              opacity: 0.1;
+            }
+            50% {
+              opacity: 0.6;
+            }
+            100% {
+              transform: translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px) rotate(360deg);
+              opacity: 0.1;
+            }
+          }
+        \`;
+        document.head.appendChild(style);
+      </script>
+    </body>
+    </html>
   `;
   res.send(coloredText);
 });
