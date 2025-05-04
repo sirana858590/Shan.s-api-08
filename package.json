@@ -1,12 +1,10 @@
 {
-  "name": "shans-api",
+  "name": "ShAn-Api",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.js"
   },
-  "author": "ShAn",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
     "pastebin-js": "^1.0.0"
