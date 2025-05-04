@@ -1,17 +1,16 @@
 const express = require('express');
-const PastebinAPI = require('pastebin-ts');
 const fs = require('fs');
 const path = require('path');
+const { PastebinAPI } = require('pastebin-ts');
 const app = express();
 app.use(express.json());
 
 const pastebin = new PastebinAPI({
-  api_dev_key: 'kI1rx9nggVy2o-nr3P0WqiHTS__ek9VV'
+  apiKey: 'LFhKGk5aRuRBII5zKZbbEpQjZzboWDp9'
 });
 
 app.post('/upload', async (req, res) => {
   const { filename } = req.body;
-
   if (!filename) return res.status(400).send({ error: 'Filename is required.' });
 
   const filePath = path.join(__dirname, 'cmds', filename.endsWith('.js') ? filename : `${filename}.js`);
@@ -20,18 +19,18 @@ app.post('/upload', async (req, res) => {
   const fileContent = fs.readFileSync(filePath, 'utf8');
 
   try {
-    const paste = await pastebin.createPaste({
-      text: fileContent,
-      title: filename,
-      format: null,
-      privacy: 1
+    const pasteUrl = await pastebin.createPaste({
+      code: fileContent,
+      name: filename,
+      format: 'javascript',
+      publicity: 1
     });
 
-    const rawPaste = paste.replace("pastebin.com", "pastebin.com/raw");
-    res.send({ url: rawPaste });
+    const rawUrl = pasteUrl.replace('pastebin.com', 'pastebin.com/raw');
+    res.send({ url: rawUrl });
   } catch (err) {
     console.error(err);
-    res.status(500).send({ error: 'Failed to upload to Pastebin.' });
+    res.status(500).send({ error: 'Pastebin upload failed.' });
   }
 });
 
