@@ -1,5 +1,5 @@
 const express = require('express');
-const PastebinAPI = require('pastebin-js');
+const PastebinAPI = require('pastebin-ts');
 const fs = require('fs');
 const path = require('path');
 const app = express();
