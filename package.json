@@ -5,8 +5,9 @@
   "scripts": {
     "start": "node server.js"
   },
+  "license": "MIT"
   "dependencies": {
     "express": "^4.18.2",
-    "pastebin-js": "^1.0.0"
+    "pastebin-ts": "^1.0.0"
   }
 }
