@@ -1,24 +1,17 @@
 {
   "name": "pastebin-api",
-  "version": "1.1.0",
-  "description": "A simple API to upload files to Pastebin using pastebin-ts",
+  "version": "1.0.0",
+  "description": "Simple Pastebin API using pastebin-ts and Express",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "pastebin-ts": "^1.0.4"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.4",
+    "pastebin-ts": "^2.0.1"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "keywords": [
-    "pastebin",
-    "api",
-    "express",
-    "upload"
-  ],
-  "author": "SANDIP",
+  "keywords": [],
+  "author": "shan",
   "license": "MIT"
 }
