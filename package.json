@@ -1,13 +1,24 @@
 {
-  "name": "ShAn-Api",
-  "version": "1.0.0",
+  "name": "pastebin-api",
+  "version": "1.1.0",
+  "description": "A simple API to upload files to Pastebin using pastebin-ts",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "license": "MIT"
   "dependencies": {
     "express": "^4.18.2",
-    "pastebin-ts": "^1.0.0"
-  }
+    "pastebin-ts": "^1.0.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "pastebin",
+    "api",
+    "express",
+    "upload"
+  ],
+  "author": "SANDIP",
+  "license": "MIT"
 }
