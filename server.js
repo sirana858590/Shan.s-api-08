@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const OPENAI_API_KEY = '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'; // <-- paste your actual key here
+const OPENAI_API_KEY = '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'; // <-- paste your actual key here
 
 app.use(cors());
 app.use(express.json());
