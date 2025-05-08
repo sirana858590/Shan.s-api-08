@@ -8,7 +8,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/bbybot', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://ewrshan96:shan252@shan.t3oyce4.mongodb.net/bbybot?retryWrites=true&w=majority&appName=ShAn', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
