@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
 const Message = mongoose.model('Message', messageSchema);
 const User = mongoose.model('User', userSchema);
 
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome-ShSn.s-Api' });
+});
+
 // API Endpoints
 app.get('/bby', async (req, res) => {
   const { text, uid, font } = req.query;
