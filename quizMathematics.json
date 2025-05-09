@@ -1,0 +1,32 @@
+[
+  {
+    "question": "৫ + ৭ কত?",
+    "correctAnswer": "১২",
+    "options": {
+      "a": "১১",
+      "b": "১৩",
+      "c": "১২",
+      "d": "১০"
+    }
+  },
+  {
+    "question": "১০ × ৩ = ?",
+    "correctAnswer": "৩০",
+    "options": {
+      "a": "৩০",
+      "b": "২০",
+      "c": "২৫",
+      "d": "৩৫"
+    }
+  },
+  {
+    "question": "৯ - ৪ = ?",
+    "correctAnswer": "৫",
+    "options": {
+      "a": "৪",
+      "b": "৫",
+      "c": "৬",
+      "d": "৭"
+    }
+  }
+]
