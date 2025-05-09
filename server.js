@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Optional: Set your Imgur client ID
-imgur.setClientId("YOUR_IMGUR_CLIENT_ID");
+imgur.setClientId("1993fffad217059");
 
 app.get("/imgur", async (req, res) => {
   const imageUrl = req.query.url;
@@ -23,6 +23,11 @@ app.get("/imgur", async (req, res) => {
     return res.status(500).json({ error: "Imgur upload failed" });
   }
 });
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome-ShSn.s-Api' });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
