@@ -1,40 +1,44 @@
-const express = require('express');
+const express = require("express");
+const cors = require("cors");
+
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
-// Load quiz data using require
-const quizBn = require('./quizBangla.json');
-const quizEn = require('./quizEnglish.json');
-const quizMath = require('./quizMathematics.json');
+// Load quiz data
+const quizBn = require("./data/quizBangla.json");
+const quizEn = require("./data/quizEnglish.json");
+const quizMath = require("./data/quizMathematics.json");
 
-// Category map
-const quizMap = {
-  bangla: quizBn,
-  english: quizEn,
-  mathematics: quizMath
-};
+app.use(cors());
 
-// Home route
-app.get('/', (req, res) => {
-  res.send("Welcome to Quiz API! Use /quiz?category=bangla|english|mathematics");
-});
-
-// Quiz route
-app.get('/quiz', (req, res) => {
+// API route
+app.get("/quiz", (req, res) => {
   const category = req.query.category?.toLowerCase();
-  const quizList = quizMap[category];
 
-  if (!quizList) {
-    return res.status(400).json({
-      error: "Invalid category. Use bangla, english, or mathematics"
-    });
+  let dataSet;
+  switch (category) {
+    case "bangla":
+      dataSet = quizBn;
+      break;
+    case "english":
+      dataSet = quizEn;
+      break;
+    case "mathematics":
+      dataSet = quizMath;
+      break;
+    default:
+      return res.status(400).json({ error: "Invalid or missing category" });
   }
 
-  const random = quizList[Math.floor(Math.random() * quizList.length)];
-  res.json({ question: random });
+  const randomQuestion = dataSet[Math.floor(Math.random() * dataSet.length)];
+  return res.json({ question: randomQuestion });
 });
 
-// Start server
+// Root test
+app.get("/", (req, res) => {
+  res.send("Quiz API Server is running.");
+});
+
 app.listen(port, () => {
-  console.log(`✅ Quiz API running at http://localhost:${port}`);
+  console.log(`✅ Quiz API is live at http://localhost:${port}`);
 });
