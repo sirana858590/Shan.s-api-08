@@ -5,9 +5,9 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 // Load quiz data
-const quizBn = require("./data/quizBangla.json");
-const quizEn = require("./data/quizEnglish.json");
-const quizMath = require("./data/quizMathematics.json");
+const quizBn = require("./quizBangla.json");
+const quizEn = require("./quizEnglish.json");
+const quizMath = require("./quizMathematics.json");
 
 app.use(cors());
 
