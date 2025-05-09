@@ -1,19 +1,16 @@
 {
-  "name": "bby-chatbot-api",
+  "name": "quiz-api-server",
   "version": "1.0.0",
-  "description": "API for BBY Chatbot",
+  "description": "Simple quiz API for GoatBot using Bangla, English, and Mathematics questions",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node server.js"
   },
+  "keywords": ["quiz", "api", "goatbot", "express"],
+  "author": "Dipto",
+  "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "mongoose": "^8.0.3"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
+    "express": "^4.18.2"
   }
 }
