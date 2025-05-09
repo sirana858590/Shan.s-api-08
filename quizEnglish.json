@@ -1,7 +1,7 @@
 [
   {
     "question": "What is the capital of France?",
-    "correctAnswer": "Paris",
+    "correctAnswer": "c",
     "options": {
       "a": "Rome",
       "b": "Madrid",
@@ -11,7 +11,7 @@
   },
   {
     "question": "Which planet is known as the Red Planet?",
-    "correctAnswer": "Mars",
+    "correctAnswer": "b",
     "options": {
       "a": "Jupiter",
       "b": "Mars",
