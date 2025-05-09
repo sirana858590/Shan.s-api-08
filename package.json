@@ -1,16 +1,16 @@
 {
-  "name": "quiz-api-server",
+  "name": "imgur-api-server",
   "version": "1.0.0",
-  "description": "Simple quiz API for GoatBot using Bangla, English, and Mathematics questions",
+  "description": "A simple Express server to upload images to Imgur using a public URL",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["quiz", "api", "goatbot", "express"],
-  "author": "Dipto",
+  "author": "Your Name",
   "license": "MIT",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "axios": "^1.6.0",
+    "express": "^4.18.2",
+    "imgur": "^1.0.2"
   }
 }
