@@ -1,44 +1,29 @@
 const express = require("express");
-const cors = require("cors");
+const axios = require("axios");
+const imgur = require("imgur");
 
 const app = express();
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-// Load quiz data
-const quizBn = require("./quizBangla.json");
-const quizEn = require("./quizEnglish.json");
-const quizMath = require("./quizMathematics.json");
+// Optional: Set your Imgur client ID
+imgur.setClientId("YOUR_IMGUR_CLIENT_ID");
 
-app.use(cors());
+app.get("/imgur", async (req, res) => {
+  const imageUrl = req.query.url;
 
-// API route
-app.get("/quiz", (req, res) => {
-  const category = req.query.category?.toLowerCase();
-
-  let dataSet;
-  switch (category) {
-    case "bangla":
-      dataSet = quizBn;
-      break;
-    case "english":
-      dataSet = quizEn;
-      break;
-    case "mathematics":
-      dataSet = quizMath;
-      break;
-    default:
-      return res.status(400).json({ error: "Invalid or missing category" });
+  if (!imageUrl) {
+    return res.status(400).json({ error: "Missing image URL" });
   }
 
-  const randomQuestion = dataSet[Math.floor(Math.random() * dataSet.length)];
-  return res.json({ question: randomQuestion });
+  try {
+    const response = await imgur.uploadUrl(imageUrl);
+    return res.json({ data: response.link });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Imgur upload failed" });
+  }
 });
 
-// Root test
-app.get("/", (req, res) => {
-  res.send("Quiz API Server is running.");
-});
-
-app.listen(port, () => {
-  console.log(`✅ Quiz API is live at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
